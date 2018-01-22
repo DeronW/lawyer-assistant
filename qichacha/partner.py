@@ -20,8 +20,9 @@ class Partner():
         self.nature_nodes.append({ 
             'name': d['name'], 
             'level': nested_level + d['Level'],
-            'amount': d['FundedAmount'], 
-            'rate': d['FundedRate'] 
+            'amount': d['FundedAmount'],
+            'rate': d['FundedRate'],
+            'short_name': d['ShortName']
         })
 
     def arrest_children(self, children, nested_level):
@@ -43,7 +44,7 @@ class Partner():
         r = get('/cms_map', { 'keyNo': k, 'upstreamCount': 4, 'downstreamCount': 4})
         j = r.json()
         if j['Status'] != 200:
-            print('Error', 'Failed when fetching Partners', j['Result']['Message'])
+            print('Error', 'Failed when fetching Partners', j['Message'])
         else:
             node = j['Result']['Node']
             if node['ShortName'] == '国有资产经营': # 国有资产, 下面不再有股东
@@ -74,11 +75,6 @@ def generate_partner(company_key):
 
     partners = Partner(company_key)
     partners.start()
-
-    # print(partners.company_key)
-    # print(partners.nature_nodes)
-    # print(partners.unsolved_nodes)
-    # print(partners.solved_company_keys)
 
     return partners.nature_nodes
 

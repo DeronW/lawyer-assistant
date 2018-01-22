@@ -11,23 +11,31 @@ def run():
         print('Error, empty company key')
     else:
         company_name = ''
-        # r = get('/tax_view', { 'keyno': COMPANY_KEY, 'ajaxflag': 1 })
-        # j = r.json()
-        # print('')
-        # print('公司名称: ', j['data']['Name'])
-        # print('社保号: ', j['data']['CreditCode'])
-        # print('\n开始检索...\n')
+        partners = []
+        investment = []
 
-        partners = generate_partner(COMPANY_KEY)
-        generate_investment(COMPANY_KEY)
+        r = get('/tax_view', { 'keyno': COMPANY_KEY, 'ajaxflag': 1 })
+        j = r.json()
+        print('')
+        print('公司名称: ', j['data']['Name'])
+        print('社保号: ', j['data']['CreditCode'])
+        print('\n开始检索...\n')
 
+        company_name = j['data']['Name']
 
-        print(partners)
+        # partners = generate_partner(COMPANY_KEY) # comment when debug
+        investment = generate_investment(COMPANY_KEY)
         
-        # with open('股权追溯表-%s.xlsx' % company_name, 'w') as f:
-            # for i in partners:
-                # print(partners)
+        with open('股权追溯表-%s.csv' % company_name, 'w') as f:
+            f.write('%s,%s,%s,%s\n' % ('股东名称', '层级', '持股(上一级公司)比例', '备注'))
+            for i in partners:
+                f.write('%s,%s,%s,%s\n' % (i['name'], i['level'], i['rate'] or '不清楚', i['short_name']))
 
+        with open('投资追溯表-%s.csv' % company_name, 'w') as f:
+            f.write('%s,%s,%s\n' % ('被投公司名称', '层级', '持股(下一级公司)比例'))
+            for i in partners:
+                f.write('%s,%s,%s\n' % (i['name'], i['level'], i['rate'] or ''))
+    
 
 if __name__ == '__main__':
     run()
