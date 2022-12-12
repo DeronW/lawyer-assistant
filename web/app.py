@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -8,10 +8,21 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/hello/")
-@app.route("/hello/<name>")
-def hello(name=None):
-    return render_template("hello.html", name=name)
+@app.route("/replace")
+def template():
+    return render_template("replace.html")
+
+
+@app.route("/api/replace", methods=["POST"])
+def replace():
+    form = request.form
+    src1 = form.get("source1")
+    tar1 = form.get("target1")
+    doc = request.files["docfile"]
+
+    print(src1, tar1)
+    print(doc)
+    return "123"
 
 
 if __name__ == "__main__":
