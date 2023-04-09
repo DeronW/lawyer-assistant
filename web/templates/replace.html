@@ -1,133 +1,54 @@
 {% extends "layout.html" %} {% block body %}
 <br />
-<div class="container">
-  <form action="/api/replace" method="post" enctype="multipart/form-data">
-    <div class="row">
-      <div class="col">
-        <table class="table">
-          <thead>
-            <tr>
-              <th style="width: 60px">序号</th>
-              <th scope="col">原始内容</th>
-              <th scope="col">新内容</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#1</td>
-              <td>
-                <input name="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input name="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td>#2</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td>#3</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td>#4</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td>#5</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col">
-        <table class="table">
-          <thead>
-            <tr>
-              <th style="width: 60px">序号</th>
-              <th scope="col">原始内容</th>
-              <th scope="col">新内容</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#6</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td>#7</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td>#8</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td>#9</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td>#10</td>
-              <td>
-                <input id="source1" class="form-control" type="text" />
-              </td>
-              <td>
-                <input id="target1" class="form-control" type="text" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <input title="file" type="file" name="docfile" class="form-control" />
-      </div>
-      <div class="col">
+<div class="container-sm">
+  <div class="row">
+    <div class="col-4">
+      {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+      <form action="/api/replace" target="_blank" method="post" enctype="multipart/form-data">
+        <label class="form-label">模板 Word 文件</label>
+        <input
+          title="file"
+          type="file"
+          name="docfile"
+          class="form-control"
+          placeholder="模板文件"
+          accept=".docx"
+          onchange="docxChange(this)"
+        />
+
+        <br />
+        <label class="form-label">替换内容的 Excel 文件</label>
+        <input
+          title="file"
+          type="file"
+          name="excelfile"
+          class="form-control"
+          accept=".xlsx"
+        />
+
+        <br />
+        <input
+          id="new_filename"
+          name="new_filename"
+          type="text"
+          class="form-control"
+          placeholder="生成的新文件名称"
+        />
+
+        <br />
         <button type="submit" class="btn btn-primary">提交</button>
-      </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
+
+<script>
+  function docxChange(input) {
+    const f = input.files[0];
+    window.docx = f;
+    $("#new_filename").val(f ? f.name.split(".").slice(0, -1).join(".") : "");
+  }
+</script>
 {% endblock %}
